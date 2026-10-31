@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Apprends l'informatique à ton rythme avec Mentor IT, ton mentor propulsé par Gemma et exécuté en local."
+    />
+    <meta name="theme-color" content="#111110" />
+    <title>Mentor IT — Apprendre, pas à pas</title>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Navigation principale">
+        <a class="brand" href="#" aria-label="Mentor IT, accueil" data-action="home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M8 9h11a4 4 0 0 1 4 4v1" />
+              <path d="m19 11 4 4 4-4" />
+              <path d="M24 23H13a4 4 0 0 1-4-4v-1" />
+              <path d="m13 21-4-4-4 4" />
+            </svg>
+          </span>
+          <span class="brand-name">mentor<span>IT</span></span>
+        </a>
+
+        <button class="new-chat-button" data-action="new-chat" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>Nouvelle discussion</span>
+          <kbd>⌘ K</kbd>
+        </button>
+
+        <div class="sidebar-section-label">ESPACE</div>
+        <nav class="primary-nav">
+          <a class="nav-link active" href="#" data-action="home">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4 4" />
+            </svg>
+            <span>Découvrir</span>
+            <span class="nav-indicator" aria-hidden="true"></span>
+          </a>
+        </nav>
+
+        <div class="sidebar-topic-label">
+          <span>POUR COMMENCER</span>
+          <span aria-hidden="true">✦</span>
+        </div>
+        <button class="topic-link" data-prompt="Explique-moi les variables comme si je n’avais jamais codé." type="button">
+          <span class="topic-dot topic-dot-lilac"></span>Le code, simplement
+        </button>
+        <button class="topic-link" data-prompt="Peux-tu m'expliquer ce qu'est HTML avec un exemple simple ?" type="button">
+          <span class="topic-dot topic-dot-peach"></span>Créer une page web
+        </button>
+        <button class="topic-link" data-prompt="Qu'est-ce qu'un terminal et comment l'utiliser ?" type="button">
+          <span class="topic-dot topic-dot-blue"></span>Apprivoiser le terminal
+        </button>
+
+        <div class="sidebar-bottom">
+          <div class="model-badge" title="Modèle IA configuré dans Ollama">
+            <span class="model-dot" id="model-dot"></span>
+            <span class="model-badge-label">GEMMA</span>
+            <span class="model-divider"></span>
+            <label class="sr-only" for="model-select">Modèle Ollama</label>
+            <select id="model-select" aria-label="Modèle IA">
+              <option value="gemma3:1b">gemma3:1b</option>
+            </select>
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="m4 6 4 4 4-4" />
+            </svg>
+          </div>
+          <div class="local-card">
+            <span class="local-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="5" width="16" height="14" rx="3" />
+                <path d="M9 10h.01M15 10h.01M9 14h6" />
+              </svg>
+            </span>
+            <span>
+              <strong>100 % en local</strong>
+              <span>Tes questions restent chez toi.</span>
+            </span>
+          </div>
+          <button class="profile-button" data-action="info" type="button">
+            <span class="profile-avatar">M</span>
+            <span class="profile-copy"><strong>Mon espace</strong><span>Apprendre à mon rythme</span></span>
+            <span class="profile-menu-dots" aria-hidden="true">···</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="floating-actions" aria-label="Actions rapides">
+          <button class="icon-button mobile-new-chat" data-action="new-chat" type="button" aria-label="Nouvelle discussion" title="Nouvelle discussion">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+          <button class="icon-button theme-toggle" data-action="theme-toggle" type="button" aria-label="Activer le mode clair" title="Activer le mode clair">
+            <svg class="theme-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </svg>
+            <svg class="theme-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20.1 15.4A8.5 8.5 0 0 1 8.6 3.9 8.5 8.5 0 1 0 20.1 15.4Z" />
+            </svg>
+          </button>
+        </div>
+
+        <section class="conversation" aria-label="Conversation avec ton mentor">
+          <div class="welcome" id="welcome">
+            <div class="welcome-eyebrow"><span class="eyebrow-line"></span> TON ESPACE D’APPRENTISSAGE <span class="eyebrow-line"></span></div>
+            <div class="hero-mark" aria-hidden="true">
+              <svg viewBox="0 0 52 52" fill="none">
+                <path d="M10 15h18a7 7 0 0 1 7 7v2" />
+                <path d="m29 19 6 6 6-6" />
+                <path d="M42 37H24a7 7 0 0 1-7-7v-2" />
+                <path d="m23 33-6-6-6 6" />
+              </svg>
+            </div>
+            <h1>La tech, <span>à ton rythme.</span></h1>
+            <p class="welcome-copy">Une question à la fois, sans jargon et sans jugement.<br />On apprend mieux quand on avance ensemble.</p>
+
+            <div class="suggestion-grid" aria-label="Suggestions de questions">
+              <button class="suggestion-card" data-prompt="C’est quoi une variable ? Explique-moi avec un exemple facile à tester." type="button">
+                <span class="suggestion-icon icon-variable" aria-hidden="true">x²</span>
+                <span class="suggestion-text"><strong>Les bases du code</strong><span>C’est quoi, une variable ?</span></span>
+                <span class="suggestion-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="suggestion-card" data-prompt="C'est quoi HTML ? Montre-moi un exemple simple pour créer un titre sur une page web." type="button">
+                <span class="suggestion-icon icon-web" aria-hidden="true">⌘</span>
+                <span class="suggestion-text"><strong>Le web, démystifié</strong><span>HTML, ça sert à quoi ?</span></span>
+                <span class="suggestion-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button class="suggestion-card" data-prompt="Aide-moi à comprendre cette erreur TypeScript : comment la lire et par où commencer pour la corriger ?" type="button">
+                <span class="suggestion-icon icon-debug" aria-hidden="true">⌕</span>
+                <span class="suggestion-text"><strong>Débloquer un bug</strong><span>Mon code affiche une erreur…</span></span>
+                <span class="suggestion-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+
+            <div class="topic-chips">
+              <span class="topic-chips-label">À explorer</span>
+              <button class="topic-chip" data-prompt="Qu'est-ce qu'une boucle en programmation ? Donne-moi un petit exemple." type="button"><span>✳</span> Les boucles</button>
+              <button class="topic-chip" data-prompt="Explique-moi la différence entre le HTML, le CSS et JavaScript en termes simples." type="button"><span>◈</span> Le web</button>
+              <button class="topic-chip" data-prompt="Qu'est-ce qu'un terminal ? Explique-moi comment faire ma première commande." type="button"><span>⌘</span> Le terminal</button>
+              <button class="topic-chip" data-prompt="Aide-moi à découvrir les bases de Python avec un petit exercice." type="button"><span>◎</span> Python</button>
+            </div>
+          </div>
+
+          <div class="messages" id="messages" aria-live="polite"></div>
+        </section>
+
+        <footer class="composer-area">
+          <form class="composer" id="chat-form" autocomplete="off">
+            <label class="sr-only" for="message-input">Écris ta question à ton mentor</label>
+            <textarea id="message-input" name="message" rows="1" placeholder="Pose ta question, même si elle te semble toute simple…" required></textarea>
+            <div class="composer-footer">
+              <div class="composer-hint"><span class="hint-sparkle">✳</span> Aucun jargon. Aucune question n’est bête.</div>
+              <div class="composer-controls">
+                <span class="key-hint"><kbd>Entrée</kbd> pour envoyer</span>
+                <button class="send-button" id="send-button" type="submit" aria-label="Envoyer la question" title="Envoyer">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 19V5M6 11l6-6 6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </form>
+          <p class="disclaimer"><span aria-hidden="true">◉</span> Gemma répond depuis ton ordinateur. Vérifie les informations importantes et teste le code.</p>
+        </footer>
+      </main>
+    </div>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
