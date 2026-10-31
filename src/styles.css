@@ -426,29 +426,9 @@ kbd {
   border-left: 1px solid var(--border-bright);
 }
 
-.model-badge select {
-  width: 86px;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
+.model-name {
   color: #c6c5bd;
-  cursor: pointer;
   font-size: 10px;
-}
-
-.model-badge option {
-  background: #191918;
-}
-
-.model-badge > svg {
-  width: 11px;
-  flex: 0 0 auto;
-  stroke: #898980;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.4;
-  pointer-events: none;
 }
 
 .floating-actions {
@@ -1159,11 +1139,6 @@ kbd {
     height: 29px;
     gap: 6px;
     padding: 0 7px;
-  }
-
-  .model-badge select {
-    width: 80px;
-    font-size: 9px;
   }
 
   .mobile-new-chat {

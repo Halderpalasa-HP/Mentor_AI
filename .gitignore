@@ -2,3 +2,6 @@ node_modules/
 dist/
 tsconfig.tsbuildinfo
 *.webp
+.env
+.env.*
+!.env.example

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Apprends l'informatique à ton rythme avec Mentor IT, ton mentor propulsé par Gemma et exécuté en local."
+      content="Apprends l'informatique à ton rythme avec Mentor IT et Gemma 4."
     />
     <meta name="theme-color" content="#111110" />
     <title>Mentor IT — Apprendre, pas à pas</title>
@@ -60,17 +60,11 @@
         </button>
 
         <div class="sidebar-bottom">
-          <div class="model-badge" title="Modèle IA configuré dans Ollama">
+          <div class="model-badge" id="model-status" title="État de la connexion à Google AI Studio">
             <span class="model-dot" id="model-dot"></span>
             <span class="model-badge-label">GEMMA</span>
             <span class="model-divider"></span>
-            <label class="sr-only" for="model-select">Modèle Ollama</label>
-            <select id="model-select" aria-label="Modèle IA">
-              <option value="gemma3:1b">gemma3:1b</option>
-            </select>
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="m4 6 4 4 4-4" />
-            </svg>
+            <span class="model-name">Gemma · Google AI Studio</span>
           </div>
           <div class="local-card">
             <span class="local-card-icon" aria-hidden="true">
@@ -80,8 +74,8 @@
               </svg>
             </span>
             <span>
-              <strong>100 % en local</strong>
-              <span>Tes questions restent chez toi.</span>
+              <strong>Clé protégée</strong>
+              <span>Jamais exposée au navigateur.</span>
             </span>
           </div>
           <button class="profile-button" data-action="info" type="button">
@@ -170,7 +164,7 @@
               </div>
             </div>
           </form>
-          <p class="disclaimer"><span aria-hidden="true">◉</span> Gemma répond depuis ton ordinateur. Vérifie les informations importantes et teste le code.</p>
+          <p class="disclaimer"><span aria-hidden="true">◉</span> Tes questions sont envoyées à Google et au fournisseur du modèle. Vérifie les informations importantes et teste le code.</p>
         </footer>
       </main>
     </div>

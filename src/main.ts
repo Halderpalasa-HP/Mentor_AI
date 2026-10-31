@@ -5,24 +5,17 @@ type ChatMessage = {
   content: string;
 };
 
-type OllamaResponse = {
-  message?: {
-    content?: string;
-  };
+type ChatApiResponse = {
+  answer?: string;
   error?: string;
 };
 
-type OllamaTagsResponse = {
-  models?: Array<{
-    name?: string;
-    model?: string;
-  }>;
+type BackendHealthResponse = {
+  status?: string;
+  provider?: string;
+  configured?: boolean;
 };
 
-const SYSTEM_PROMPT = `Tu es Mentor IT, un mentor patient qui aide les personnes débutantes à apprendre l'informatique. Réponds toujours en français, avec des mots simples et sans juger. Explique une notion à la fois et définis les termes techniques. Utilise un exemple concret et facile à tester quand c'est utile. Pour aider la personne à progresser, termine par une petite question ou un exercice lorsque c'est pertinent. Si tu n'es pas certain d'une réponse, dis-le clairement. Ne prétends pas avoir exécuté du code.`;
-
-const OLLAMA_URL = "http://localhost:11434";
-const DEFAULT_MODEL = "gemma3:1b";
 const messages: ChatMessage[] = [];
 
 const welcome = document.querySelector<HTMLElement>("#welcome")!;
@@ -30,8 +23,8 @@ const messageList = document.querySelector<HTMLElement>("#messages")!;
 const form = document.querySelector<HTMLFormElement>("#chat-form")!;
 const input = document.querySelector<HTMLTextAreaElement>("#message-input")!;
 const sendButton = document.querySelector<HTMLButtonElement>("#send-button")!;
-const modelSelect = document.querySelector<HTMLSelectElement>("#model-select")!;
 const modelDot = document.querySelector<HTMLElement>("#model-dot")!;
+const modelStatus = document.querySelector<HTMLElement>("#model-status")!;
 const toastRegion = document.querySelector<HTMLElement>("#toast-region")!;
 
 let isSending = false;
@@ -119,7 +112,7 @@ function addMessage(role: ChatMessage["role"], content: string): HTMLElement {
   label.className = "message-label";
   label.innerHTML =
     role === "assistant"
-      ? 'Ton mentor <span class="message-model">· ' + escapeHtml(modelSelect.value) + "</span>"
+        ? 'Ton mentor <span class="message-model">· Gemma 4</span>'
       : "Toi";
 
   const contentElement = document.createElement("div");
@@ -193,26 +186,23 @@ async function sendToMentor(text: string): Promise<void> {
   setLoading(true);
 
   try {
-    const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+    const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: modelSelect.value || DEFAULT_MODEL,
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-        stream: false,
-        options: { temperature: 0.7 },
+        messages,
       }),
       signal: AbortSignal.timeout(120_000),
     });
 
-    const data = (await response.json()) as OllamaResponse;
+    const data = (await response.json()) as ChatApiResponse;
     if (!response.ok) {
-      throw new Error(data.error || `Erreur Ollama (${response.status}).`);
+      throw new Error(data.error || `Erreur du serveur (${response.status}).`);
     }
 
-    const answer = data.message?.content?.trim();
+    const answer = data.answer?.trim();
     if (!answer) {
-      throw new Error("Gemma n’a pas renvoyé de réponse. Réessaie dans un instant.");
+      throw new Error("Gemma 4 n’a pas renvoyé de réponse. Réessaie dans un instant.");
     }
 
     messages.push({ role: "assistant", content: answer });
@@ -225,12 +215,13 @@ async function sendToMentor(text: string): Promise<void> {
     messages.pop();
     modelDot.classList.remove("connected");
     modelDot.classList.add("disconnected");
+    modelStatus.title = "Gemma indisponible. Vérifie la configuration de Google AI Studio.";
 
     const detail =
       error instanceof DOMException && error.name === "TimeoutError"
-        ? "La réponse prend plus de temps que prévu. Vérifie qu’Ollama fonctionne et réessaie."
+        ? "La réponse prend plus de temps que prévu. Réessaie dans un instant."
         : error instanceof TypeError
-          ? `Impossible de joindre Ollama sur ${OLLAMA_URL}. Lance Ollama, puis télécharge Gemma avec \`ollama pull ${DEFAULT_MODEL}\`.`
+          ? "Impossible de joindre le backend. Vérifie qu’il fonctionne avec `npm run dev`."
           : error instanceof Error
             ? error.message
             : "Une erreur inattendue s’est produite.";
@@ -278,35 +269,37 @@ function handleSubmission(rawText: string): void {
   }
 }
 
-async function checkOllama(): Promise<void> {
+async function checkBackend(): Promise<void> {
   try {
-    const response = await fetch(`${OLLAMA_URL}/api/tags`, {
+    const response = await fetch("/api/health", {
       signal: AbortSignal.timeout(3500),
     });
-    if (!response.ok) return;
+    if (!response.ok) {
+      throw new Error(`Backend indisponible (${response.status}).`);
+    }
 
-    const data = (await response.json()) as OllamaTagsResponse;
-    const models = (data.models ?? [])
-      .map((model) => model.name ?? model.model)
-      .filter((name): name is string => Boolean(name));
+    const data = (await response.json()) as BackendHealthResponse;
+    if (data.status !== "ok") {
+      throw new Error("Backend indisponible.");
+    }
 
-    if (!models.length) return;
+    if (!data.configured) {
+      modelDot.classList.remove("connected");
+      modelDot.classList.add("disconnected");
+      modelStatus.title = "Clé Google AI Studio manquante. Configure GEMINI_API_KEY dans .env.";
+      return;
+    }
 
-    modelSelect.replaceChildren(
-      ...models.map((name) => {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        return option;
-      }),
-    );
-    modelSelect.value = models.find((name) => name.startsWith("gemma")) ?? models[0]!;
     modelDot.classList.add("connected");
     modelDot.classList.remove("disconnected");
-    modelSelect.title = `${models.length} modèle${models.length > 1 ? "s" : ""} disponible${models.length > 1 ? "s" : ""} dans Ollama`;
-  } catch {
+    modelStatus.title = "Backend connecté à Google AI Studio.";
+  } catch (error) {
     modelDot.classList.remove("connected");
-    modelDot.title = "Ollama hors ligne. Démarre Ollama pour commencer.";
+    modelDot.classList.add("disconnected");
+    modelStatus.title =
+      error instanceof Error
+        ? error.message
+        : "Backend inaccessible. Lance le serveur avec npm run dev.";
   }
 }
 
@@ -346,7 +339,7 @@ document.addEventListener("click", (event) => {
   } else if (actionButton.dataset.action === "theme-toggle") {
     setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   } else if (actionButton.dataset.action === "info") {
-    showToast("Mentor IT est ton espace d’apprentissage, propulsé par un modèle IA local.");
+    showToast("Mentor IT utilise Gemma via Google AI Studio. Ta clé reste sur le serveur et les conversations ne sont pas enregistrées.");
   }
 });
 
@@ -357,5 +350,5 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-void checkOllama();
+void checkBackend();
 input.focus({ preventScroll: true });

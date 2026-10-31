@@ -2,15 +2,27 @@
   "name": "mentor-it",
   "version": "1.0.0",
   "private": true,
-  "description": "Un mentor informatique bienveillant propulsé par Gemma et Ollama.",
+  "description": "Un mentor informatique bienveillant propulsé par Gemma via Google AI Studio.",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "concurrently -k -n api,web -c auto \"node server/index.js\" \"vite --host 127.0.0.1\"",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "start": "node server/index.js",
+    "test": "node --test server/app.test.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "devDependencies": {
+    "concurrently": "^9.2.5",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.2",
+    "helmet": "^8.3.0"
   }
 }

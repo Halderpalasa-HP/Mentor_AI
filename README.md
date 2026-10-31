@@ -1,34 +1,51 @@
 # Mentor IT
 
-Une interface de discussion locale pour apprendre l'informatique à son rythme.
-Les questions sont envoyées à [Ollama](https://ollama.com/) sur le même ordinateur.
-Aucune conversation n'est enregistrée à la fermeture de l'onglet.
+Une interface de discussion pour apprendre l'informatique à son rythme. Le
+backend Node.js envoie les questions à Gemma via l’API Google AI Studio ; aucune
+conversation n'est enregistrée à la fermeture de l'onglet.
 
 ## Prérequis
 
 - Node.js 20 ou plus récent
-- Ollama installé et lancé
-- Un modèle Gemma, par exemple `gemma3:1b`
+- Une clé API [Google AI Studio](https://aistudio.google.com/apikey)
+
+Le backend utilise le modèle Gemma `gemma-4-26b-a4b-it` via l’API Gemini.
+
+## Configurer la clé API
+
+Copie le fichier d'exemple dans un fichier `.env` local :
 
 ```powershell
-ollama pull gemma3:1b
+Copy-Item .env.example .env
 ```
+
+Ajoute ta clé uniquement dans `.env`, à la place de la valeur d'exemple :
+
+```dotenv
+GEMINI_API_KEY=ta_cle_google_ai_studio
+GEMINI_MODEL=gemma-4-26b-a4b-it
+PORT=3001
+```
+
+Ne colle jamais la clé dans le code ou dans le chat. Le fichier `.env` est
+ignoré par Git ; seul `.env.example`, sans clé réelle, est versionné.
 
 ## Démarrer l'application
 
-Dans le dossier du projet :
+Installe les dépendances puis démarre le serveur API et l'interface :
 
 ```powershell
 npm install
 npm run dev
 ```
 
-Ouvre ensuite l'adresse locale affichée dans le terminal. La première connexion
-vérifie les modèles disponibles dans Ollama ; il est également possible d'en
-sélectionner un autre depuis l'interface.
+Ouvre l'adresse locale affichée par Vite. Le serveur API démarre sur le port
+`3001` et le navigateur le contacte via le proxy Vite. En production, lance
+`npm run build`, puis `npm start` pour servir le frontend et le backend.
 
-Le bouton en haut à droite permet de basculer entre le mode clair et le mode
-sombre. Le thème choisi est conservé dans le navigateur.
+Le backend refuse les questions sans clé configurée, limite la taille de
+l'historique et applique une limite de requêtes. Il ne conserve aucune donnée.
+Les requêtes sont transmises à Google et au modèle configuré.
 
 ## Commandes de discussion
 
@@ -36,6 +53,8 @@ sombre. Le thème choisi est conservé dans le navigateur.
 - `/sujet HTML` demande une mini-leçon sur le thème choisi.
 - `/quitter` termine la discussion en cours.
 - `Entrée` envoie le message et `Maj + Entrée` ajoute une nouvelle ligne.
+- Le bouton en haut à droite permet de basculer entre le mode clair et le mode
+  sombre ; le thème choisi est conservé dans le navigateur.
 
 Les réponses sont générées par un modèle d'IA : teste le code et vérifie les
 informations importantes.
