@@ -21,11 +21,7 @@ Copy-Item .env.example .env
 
 Ajoute ta clé uniquement dans `.env`, à la place de la valeur d'exemple :
 
-```dotenv
-GEMINI_API_KEY=ta_cle_google_ai_studio
-GEMINI_MODEL=gemma-4-26b-a4b-it
-PORT=3001
-```
+
 
 Ne colle jamais la clé dans le code ou dans le chat. Le fichier `.env` est
 ignoré par Git ; seul `.env.example`, sans clé réelle, est versionné.
